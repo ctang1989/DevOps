@@ -1,0 +1,20 @@
+---
+- hosts: webservers
+  vars:
+    worker_processes: 4
+    num_cpus: 4
+    max_open_file: 65506
+    root: /data
+  remote_user: root
+  tasks:
+  - name: ensure nginx is at the latest version
+    yum: pkg=nginx state=latest
+  - name: write the nginx config file
+    template: src=/root/ansible/templates/nginx2.conf dest=/etc/nginx/nginx.conf
+    notify:
+    - restart nginx
+  - name: ensure nginx is running
+    service: name=nginx state=started
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
