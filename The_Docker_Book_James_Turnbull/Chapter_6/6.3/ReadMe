@@ -1,0 +1,200 @@
+6.3 多容器的应用栈
+
+创建Node.js Dockerfile
+$ mkdir nodejs
+$ cd nodejs
+$ mkdir nodeapp
+$ cd nodeapp
+$ wget https://raw.githubusercontent.com/jamtur01/dockerbook-code/master/code/6/node/nodejs/nodeapp/package.json
+$ wget https://raw.githubusercontent.com/jamtur01/dockerbook-code/master/code/6/node/nodejs/nodeapp/server.js
+$ cd ..
+$ touch Dockerfile
+$ sudo docker build -t ctang/nodejs .
+
+创建Redis基础镜像的Dockerfile
+$ mkdir redis_base
+$ cd redis_base
+$ touch Dockerfile
+
+构建Redis基础镜像
+$ sudo docker build -t ctang/redis .
+
+创建Redis主服务器的Dockerfile
+$ mkdir redis_primary
+$ cd redis_primary
+$ touch Dockerfile
+
+构建Redis主镜像
+$ sudo docker build -t ctang/redis_primary .
+
+创建Redis从镜像的Dockerfile
+$ mkdir redis_replica
+$ cd redis_replica
+$ touch Dockerfile
+
+构建Redis从镜像
+$ sudo docker build -t ctang/redis_replica .
+
+运行Redis主容器
+注意这里的-h redis-primary, docker的hostname不再支持下划线_,不然会报错
+$ sudo docker run -d -h redis-primary --name redis_primary ctang/redis_primary
+
+读取Redis主日志
+$ sudo docker run -it --rm --volumes-from redis_primary ubuntu:16.04 cat /var/log/redis/redis-server.log
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 3.0.6 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+1:M 06 Dec 12:10:01.689 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+1:M 06 Dec 12:10:01.727 # Server started, Redis version 3.0.6
+1:M 06 Dec 12:10:01.727 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+1:M 06 Dec 12:10:01.727 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+1:M 06 Dec 12:10:01.727 * The server is now ready to accept connections on port 6379
+
+运行第一个Redis从容器
+$ sudo docker run -d -h redis-replical1 --name redis_replica1 --link redis_primary:redis_primary ctang/redis_replica
+
+读取Redis从容器的日志
+$ sudo docker run -it --rm --volumes-from redis_replica1 ubuntu:16.04 cat /var/log/redis/redis-replica.log
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 3.0.6 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+1:S 06 Dec 12:14:48.289 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+1:S 06 Dec 12:14:48.293 # Server started, Redis version 3.0.6
+1:S 06 Dec 12:14:48.293 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+1:S 06 Dec 12:14:48.293 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+1:S 06 Dec 12:14:48.293 * The server is now ready to accept connections on port 6379
+1:S 06 Dec 12:14:49.291 * Connecting to MASTER redis-primary:6379
+1:S 06 Dec 12:14:49.403 * MASTER <-> SLAVE sync started
+1:S 06 Dec 12:14:49.403 * Non blocking connect for SYNC fired the event.
+1:S 06 Dec 12:14:49.403 * Master replied to PING, replication can continue...
+1:S 06 Dec 12:14:49.403 * Partial resynchronization not possible (no cached master)
+1:S 06 Dec 12:14:49.406 * Full resync from master: bd671c0b17d2207570d0ffb760b61110159bbad0:1
+1:S 06 Dec 12:14:49.499 * MASTER <-> SLAVE sync: receiving 18 bytes from master
+1:S 06 Dec 12:14:49.499 * MASTER <-> SLAVE sync: Flushing old data
+1:S 06 Dec 12:14:49.499 * MASTER <-> SLAVE sync: Loading DB in memory
+1:S 06 Dec 12:14:49.499 * MASTER <-> SLAVE sync: Finished with success
+
+运行第二个Redis从容器
+$ sudo docker run -d -h redis-replical2 --name redis_replica2 --link redis_primary:redis_primary ctang/redis_replica
+
+第二个Redis从服务器的日志
+$ sudo docker run -it --rm --volumes-from redis_replica2 ubuntu:16.04 cat /var/log/redis/redis-replica.log          
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 3.0.6 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+1:S 06 Dec 12:16:28.252 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+1:S 06 Dec 12:16:28.252 # Server started, Redis version 3.0.6
+1:S 06 Dec 12:16:28.252 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+1:S 06 Dec 12:16:28.252 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+1:S 06 Dec 12:16:28.252 * The server is now ready to accept connections on port 6379
+1:S 06 Dec 12:16:28.252 * Connecting to MASTER redis-primary:6379
+1:S 06 Dec 12:16:28.252 * MASTER <-> SLAVE sync started
+1:S 06 Dec 12:16:28.252 * Non blocking connect for SYNC fired the event.
+1:S 06 Dec 12:16:28.255 * Master replied to PING, replication can continue...
+  S 06 Dec 12:16:28.255 * Partial resynchronization not possible (no cached master)
+▽:S 06 Dec 12:16:28.261 * Full resync from master: bd671c0b17d2207570d0ffb760b61110159bbad0:141
+1:S 06 Dec 12:16:28.331 * MASTER <-> SLAVE sync: receiving 18 bytes from master
+1:S 06 Dec 12:16:28.331 * MASTER <-> SLAVE sync: Flushing old data
+1:S 06 Dec 12:16:28.331 * MASTER <-> SLAVE sync: Loading DB in memory
+1:S 06 Dec 12:16:28.331 * MASTER <-> SLAVE sync: Finished with success
+
+运行Node.js容器
+$ sudo docker run -d --name nodeapp -p 3000:3000 --link redis_primary:redis_primary ctang/nodejs
+
+nodeapp容器的控制台日志
+$ sudo docker logs nodeapp
+Listening on port 3000
+
+访问容器
+$ curl http://localhost:3000
+
+创建Logstash Dockerfile
+注意：dockerbook上的示例文件build不成功，Elastic Docker registry上已经有了docker image, 所以这里直接使用
+$ mkdir logstash
+$ cd logstash
+$ touch Dockerfile
+
+构建Logstash镜像
+$ sudo docker build -t ctang/logstash .
+
+启动Logstash容器
+$ sudo docker run -d --name logstash --volumes-from redis_primary --volumes-from nodeapp ctang/logstash
+
+logstash容器的日志
+$ sudo docker logs -f logstash
+Sending Logstash's logs to /usr/share/logstash/logs which is now configured via log4j2.properties
+[2016-12-07T15:12:53,328][INFO ][logstash.pipeline        ] Starting pipeline {"id"=>"main", "pipeline.workers"=>1, "pipeline.batch.size"=>125, "pipeline.batch.delay"=>5, "pipeline.max_inflight"=>125}
+[2016-12-07T15:12:53,386][INFO ][logstash.pipeline        ] Pipeline main started
+[2016-12-07T15:12:53,764][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
+{
+          "path" => "/var/log/nodeapp/nodeapp.log",
+    "@timestamp" => 2016-12-07T15:17:00.772Z,
+      "@version" => "1",
+          "host" => "c42c7bbd141b",
+       "message" => "::ffff:192.168.1.101 - - [Wed, 07 Dec 2016 15:17:00 GMT] \"GET / HTTP/1.1\" 200 20 \"-\" \"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0\"",
+          "type" => "syslog",
+          "tags" => []
+}
+{
+          "path" => "/var/log/nodeapp/nodeapp.log",
+    "@timestamp" => 2016-12-07T15:17:01.836Z,
+      "@version" => "1",
+          "host" => "c42c7bbd141b",
+       "message" => "::ffff:192.168.1.101 - - [Wed, 07 Dec 2016 15:17:01 GMT] \"GET / HTTP/1.1\" 200 20 \"-\" \"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0\"",
+          "type" => "syslog",
+          "tags" => []
+}
+{
+          "path" => "/var/log/nodeapp/nodeapp.log",
+    "@timestamp" => 2016-12-07T15:18:04.129Z,
+      "@version" => "1",
+          "host" => "c42c7bbd141b",
+       "message" => "::ffff:172.17.0.1 - - [Wed, 07 Dec 2016 15:18:03 GMT] \"GET / HTTP/1.1\" 200 20 \"-\" \"curl/7.35.0\"",
+          "type" => "syslog",
+          "tags" => []
+}
