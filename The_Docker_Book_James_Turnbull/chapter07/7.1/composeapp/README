@@ -11,7 +11,14 @@ docker-compose version 1.9.0, build 2585387
 
 构建composeapp应用
 $ cd composeapp
+$ touch app.py
+$ touch requirements.txt
+$ touch Dockerfile
+$ touch docker-compose.yml
 $ sudo docker build -t ctang/composeapp .
+
+另一种构建方法，参考
+https://docs.docker.com/compose/gettingstarted/
 
 使用docker-compose up启动应用服务
 $ cd composeapp
@@ -69,6 +76,20 @@ $ sudo docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 393d5037db05        ctang/composeapp    "python app.py"          2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   composeapp_web_1
 be3d502d307e        redis               "docker-entrypoint.sh"   2 minutes ago       Up 2 minutes        6379/tcp                 composeapp_redis_1
+
+
+后台运行
+$ sudo docker-compose up -d
+Starting composeapp_redis_1
+Starting composeapp_web_1
+
+$ sudo docker-compose ps
+       Name                     Command               State           Ports          
+------------------------------------------------------------------------------------
+composeapp_redis_1   docker-entrypoint.sh redis ...   Up      6379/tcp               
+composeapp_web_1     python app.py                    Up      0.0.0.0:5000->5000/tcp
+
+
 
 
 
