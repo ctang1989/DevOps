@@ -1,0 +1,75 @@
+7.1 Docker Compose
+
+参考文档
+https://docs.docker.com/compose/
+
+安装
+$ curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ chmod +x /usr/local/bin/docker-compose
+$ docker-compose --version
+docker-compose version 1.9.0, build 2585387
+
+构建composeapp应用
+$ cd composeapp
+$ sudo docker build -t ctang/composeapp .
+
+使用docker-compose up启动应用服务
+$ cd composeapp
+$ sudo docker-compose up
+Pulling redis (redis:latest)...
+latest: Pulling from library/redis
+386a066cd84a: Already exists
+769149e3a45c: Pull complete
+1f43b3c0854a: Pull complete
+70e928127ad8: Pull complete
+0764b5f23425: Pull complete
+89d40b85d2c5: Pull complete
+7ea61cb6ec2a: Pull complete
+Digest: sha256:54057dd7e125ca41afe526a877e8bd35ec2cdd33b9217e022ed37bdcf7d09673
+Status: Downloaded newer image for redis:latest
+Creating composeapp_redis_1
+Creating composeapp_web_1
+Attaching to composeapp_redis_1, composeapp_web_1
+redis_1  | 1:C 08 Dec 15:17:53.674 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+redis_1  |                 _._                                                  
+redis_1  |            _.-``__ ''-._                                             
+redis_1  |       _.-``    `.  `_.  ''-._           Redis 3.2.6 (00000000/0) 64 bit
+redis_1  |   .-`` .-```.  ```\/    _.,_ ''-._                                   
+redis_1  |  (    '      ,       .-`  | `,    )     Running in standalone mode
+redis_1  |  |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+redis_1  |  |    `-._   `._    /     _.-'    |     PID: 1
+redis_1  |   `-._    `-._  `-./  _.-'    _.-'                                   
+redis_1  |  |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+redis_1  |  |    `-._`-._        _.-'_.-'    |           http://redis.io        
+redis_1  |   `-._    `-._`-.__.-'_.-'    _.-'                                   
+redis_1  |  |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+redis_1  |  |    `-._`-._        _.-'_.-'    |                                  
+redis_1  |   `-._    `-._`-.__.-'_.-'    _.-'                                   
+redis_1  |       `-._    `-.__.-'    _.-'                                       
+redis_1  |           `-._        _.-'                                           
+redis_1  |               `-.__.-'                                               
+redis_1  | 
+redis_1  | 1:M 08 Dec 15:17:53.687 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+redis_1  | 1:M 08 Dec 15:17:53.687 # Server started, Redis version 3.2.6
+redis_1  | 1:M 08 Dec 15:17:53.688 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+redis_1  | 1:M 08 Dec 15:17:53.688 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+redis_1  | 1:M 08 Dec 15:17:53.688 * The server is now ready to accept connections on port 6379
+web_1    |  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+web_1    |  * Restarting with stat
+web_1    |  * Debugger is active!
+web_1    |  * Debugger pin code: 530-861-536
+web_1    | 192.168.1.102 - - [08/Dec/2016 15:19:07] "GET / HTTP/1.1" 200 -
+web_1    | 192.168.1.102 - - [08/Dec/2016 15:19:08] "GET /favicon.ico HTTP/1.1" 404 -
+web_1    | 192.168.1.102 - - [08/Dec/2016 15:19:08] "GET /favicon.ico HTTP/1.1" 404 -
+web_1    | 192.168.1.102 - - [08/Dec/2016 15:19:11] "GET / HTTP/1.1" 200 -
+web_1    | 192.168.1.102 - - [08/Dec/2016 15:19:13] "GET / HTTP/1.1" 200 -
+
+查看容器运行状态
+$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+393d5037db05        ctang/composeapp    "python app.py"          2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   composeapp_web_1
+be3d502d307e        redis               "docker-entrypoint.sh"   2 minutes ago       Up 2 minutes        6379/tcp                 composeapp_redis_1
+
+
+
+
