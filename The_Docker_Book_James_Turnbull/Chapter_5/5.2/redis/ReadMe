@@ -1,7 +1,0 @@
-5.2.3 构建Redis镜像和容器
-
-root@ctang-ubuntu:~/DevOps/The_Docker_Book_James_Turnbull/Chapter_5/5.2/redis# docker build -t ctang/redis .
-root@ctang-ubuntu:~/DevOps/The_Docker_Book_James_Turnbull/Chapter_5/5.2/redis# docker run -d -p 6379 --name redis ctang/redis
-root@ctang-ubuntu:~# docker port redis 6379
-root@ctang-ubuntu:~# apt-get -y install redis-tools
-root@ctang-ubuntu:~# redis-cli -h 127.0.0.1 -p port
