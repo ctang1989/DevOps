@@ -1,0 +1,69 @@
+7.2 Consul、服务发现和Docker
+
+Consul Dockerfile
+$ mkdir consul
+$ cd consul
+$ touch Dockerfile
+$ touch consul.json
+
+构建Consul镜像
+$ sudo docker build -t ctang/consul .
+
+执行一个本地Consul节点
+$ sudo docker run -p 8500:8500 -p 53:53/udp -h node1 ctang/consul -server -bootstrap
+docker: Error response from daemon: driver failed programming external connectivity on endpoint lonely_easley (578e897758e13ff46357d974bbf28a7c755f0b6fa07945e6d9bec40ec984a7ee): Error starting userland proxy: listen udp 0.0.0.0:53: bind: address already in use.
+
+解决办法：
+查看哪个服务占用了53端口
+$ sudo lsof -i:53
+COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+dnsmasq 1021 nobody    4u  IPv4  10034      0t0  UDP ctang-docker:domain 
+dnsmasq 1021 nobody    5u  IPv4  10035      0t0  TCP ctang-docker:domain (LISTEN)
+
+原因：宿主机器上有一个 dnsmasq 服务，原来是 Ubuntu 默认安装了 dnsmasq-base 服务。
+
+通过kill 停掉该服务
+$ sudo kill -9 1021
+
+再次执行
+$ sudo docker run -p 8500:8500 -p 53:53/udp -h node1 ctang/consul -server -bootstrap
+==> WARNING: Bootstrap mode enabled! Do not enable unless necessary
+==> Starting Consul agent...
+==> Starting Consul agent RPC...
+==> Consul agent running!
+           Version: 'v0.7.1'
+         Node name: 'node1'
+        Datacenter: 'dc1'
+            Server: true (bootstrap: true)
+       Client Addr: 0.0.0.0 (HTTP: 8500, HTTPS: -1, DNS: 53, RPC: 8400)
+      Cluster Addr: 172.17.0.2 (LAN: 8301, WAN: 8302)
+    Gossip encrypt: false, RPC-TLS: false, TLS-Incoming: false
+             Atlas: <disabled>
+
+==> Log data will now stream in as it occurs:
+
+    2016/12/09 14:07:14 [INFO] raft: Initial configuration (index=1): [{Suffrage:Voter ID:172.17.0.2:8300 Address:172.17.0.2:8300}]
+    2016/12/09 14:07:14 [INFO] serf: EventMemberJoin: node1 172.17.0.2
+    2016/12/09 14:07:14 [INFO] serf: EventMemberJoin: node1.dc1 172.17.0.2
+    2016/12/09 14:07:14 [INFO] raft: Node at 172.17.0.2:8300 [Follower] entering Follower state (Leader: "")
+    2016/12/09 14:07:14 [INFO] consul: Adding LAN server node1 (Addr: tcp/172.17.0.2:8300) (DC: dc1)
+    2016/12/09 14:07:14 [INFO] consul: Adding WAN server node1.dc1 (Addr: tcp/172.17.0.2:8300) (DC: dc1)
+    2016/12/09 14:07:20 [WARN] raft: Heartbeat timeout from "" reached, starting election
+    2016/12/09 14:07:20 [INFO] raft: Node at 172.17.0.2:8300 [Candidate] entering Candidate state in term 2
+    2016/12/09 14:07:20 [INFO] raft: Election won. Tally: 1
+    2016/12/09 14:07:20 [INFO] raft: Node at 172.17.0.2:8300 [Leader] entering Leader state
+    2016/12/09 14:07:20 [INFO] consul: cluster leadership acquired
+    2016/12/09 14:07:20 [INFO] consul: New leader elected: node1
+    2016/12/09 14:07:20 [INFO] consul: member 'node1' joined, marking health alive
+    2016/12/09 14:07:20 [INFO] agent: Synced service 'consul'
+
+在浏览器里打开宿主机IP的8500端口，查看节点情况
+
+拉取Consul镜像
+$ sudo docker pull ctang/consul
+
+给主机设置公共IP地址
+$ PUBLIC_IP="$(ifconfig eth1 | awk -F ' *|:' '/inet addr/{print $4}')"
+$ echo PUBLIC_IP
+
+
