@@ -1,0 +1,57 @@
+第4章 使用Docker镜像和仓库
+
+4.1 什么是Docker镜像
+
+4.2 列出镜像
+ctang@ctang-docker:~$ sudo docker images
+REPOSITORY                            TAG                 IMAGE ID            CREATED             SIZE
+redis                                 latest              1c2ac2024e4b        4 weeks ago         182.9 MB
+ubuntu                                16.04               4ca3a192ff2a        5 weeks ago         128.2 MB
+
+4.3 拉取镜像
+ctang@ctang-docker:~$ sudo docker pull ubuntu
+Using default tag: latest
+latest: Pulling from library/ubuntu
+b3e1c725a85f: Pull complete 
+4daad8bdde31: Pull complete 
+63fe8c0068a8: Pull complete 
+4a70713c436f: Pull complete 
+bd842a2105a8: Pull complete 
+Digest: sha256:7a64bc9c8843b0a8c8b8a7e4715b7615e4e1b0d8ca3c7e7a76ec8250899c397a
+Status: Downloaded newer image for ubuntu:latest
+ctang@ctang-docker:~$ 
+
+4.4 查找镜像
+ctang@ctang-docker:~$ sudo docker search ubuntu
+NAME                              DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+ubuntu                            Ubuntu is a Debian-based Linux operating s...   5308      [OK]       
+ubuntu-upstart                    Upstart is an event-based replacement for ...   69        [OK]       
+...
+ctang@ctang-docker:~$ 
+
+4.5 构建镜像
+ctang@ctang-docker:~$ sudo docker build -t "ctang/static_web" .
+
+4.5.10 Dockerfile指令
+CMD			用于指定一个容器启动时要运行的命令
+ENTRYPOINT	类似于CMD，区别在于，我们可以在docker run命令行中覆盖CMD指令，而ENTRYPOINT指令提供的命令则不容易在启动容器时被覆盖
+WORKDIR		在容器内部设置一个工作目录
+ENV			在镜像构建过程中设置环境变量
+USER		指定该镜像会以什么样的用户去运行
+VOLUME		用来向基于镜像创建的容器添加卷
+ADD			用来将构建环境下的文件和目录复制到镜像中
+COPY		类似于ADD，区别在于COPY只关心在构建上下文中复制本地文件，而不会去做文件提取和解压的工作
+ONBUILD		为镜像添加触发器
+
+4.6 将镜像推送到Docker Hub
+$ sudo docker push ctang/static_web
+
+4.7 删除镜像
+$ sudo docker rmi ctang/static_web
+
+删除所有镜像
+$ sudo docker rmi `sudo docker images -a -q`
+
+4.8 运行自己的Docker Registry
+
+
