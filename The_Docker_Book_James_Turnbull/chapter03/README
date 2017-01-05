@@ -1,0 +1,219 @@
+第3章 Docker入门
+
+3.1 确保Docker已经就绪
+ctang@ctang-docker:~$ sudo docker info
+
+3.2 运行我们的第一个容器
+ctang@ctang-docker:~$ sudo docker run -i -t ubuntu:16.04 /bin/bash
+root@1144bd0b7da8:/# 
+
+3.3 使用第一个容器
+检查容器的主机名
+root@1144bd0b7da8:/# hostname
+1144bd0b7da8
+root@1144bd0b7da8:/#
+
+检查容器的/etc/hosts文件 
+root@1144bd0b7da8:/# cat /etc/hosts
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.2      1144bd0b7da8
+root@1144bd0b7da8:/#
+
+检查容器的进程
+root@1144bd0b7da8:/# ps -aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.3  18240  3220 ?        Ss   13:25   0:00 /bin/bash
+root        12  0.0  0.2  34424  2636 ?        R+   13:29   0:00 ps -aux
+root@1144bd0b7da8:/#
+
+在第一个容器中安装软件包
+root@1144bd0b7da8:/# apt-get update && apt-get install vim
+
+查看当前系统中容器的列表，包括正在运行的和已经停止的
+ctang@ctang-docker:~$ sudo docker ps -a
+
+查看正在运行的容器
+ctang@ctang-docker:~$ sudo docker ps
+
+列出最后一次运行的容器，包括正在运行和已经停止的
+ctang@ctang-docker:~$ sudo docker ps -l
+
+3.4 容器命名
+ctang@ctang-docker:~$ sudo docker run --name bob_the_container -i -t ubuntu:16.04 /bin/bash
+root@0d22cc9b243a:/# exit
+
+3.5 重新启动已经停止的容器
+ctang@ctang-docker:~$ sudo docker start bob_the_container
+bob_the_container
+ctang@ctang-docker:~$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+0d22cc9b243a        ubuntu:16.04        "/bin/bash"         3 minutes ago       Up 2 minutes                            bob_the_container
+ctang@ctang-docker:~$ 
+
+通过ID启动已经停止运行的容器
+ctang@ctang-docker:~$ sudo docker start 0d22cc9b243a
+0d22cc9b243a
+ctang@ctang-docker:~$ 
+
+3.6 附着到容器上
+ctang@ctang-docker:~$ sudo docker attach bob_the_container
+root@0d22cc9b243a:/# 
+
+通过ID附着到正在运行的容器
+ctang@ctang-docker:~$ sudo docker attach 0d22cc9b243a
+root@0d22cc9b243a:/# 
+
+3.7 创建守护式容器
+ctang@ctang-docker:~$ sudo docker run --name daemon_dave -d ubuntu:16.04 /bin/sh -c "while true; do echo hello world; sleep 1; done"
+e54e69852730717ac105bbac682b93379c8151d5eea1616c37dec973fed1b84f
+ctang@ctang-docker:~$ 
+ctang@ctang-docker:~$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+e54e69852730        ubuntu:16.04        "/bin/sh -c 'while tr"   26 seconds ago      Up 25 seconds                           daemon_dave
+ctang@ctang-docker:~$ 
+
+3.8 容器内部都在干些什么
+获取守护式容器的日志
+ctang@ctang-docker:~$ sudo docker logs daemon_dave
+hello world
+hello world
+hello world
+...
+hello world
+ctang@ctang-docker:~$ 
+
+跟踪守护式容器的日志
+ctang@ctang-docker:~$ sudo docker logs -f daemon_dave
+hello world
+hello world
+hello world
+...
+
+获取日志的最后10行内容
+ctang@ctang-docker:~$ sudo docker logs --tail 10 daemon_dave
+hello world
+hello world
+...
+hello world
+ctang@ctang-docker:~$ 
+
+跟踪某个容器的最新日志而不必读取整个日志文件
+ctang@ctang-docker:~$ sudo docker logs --tail 0 -f daemon_dave
+hello world
+hello world
+hello world
+hello world
+^Cctang@ctang-docker:~$ 
+
+为了让调试更简单，使用-t标志为每条日志项加上时间戳
+ctang@ctang-docker:~$ sudo docker logs -ft daemon_dave
+2017-01-04T14:16:32.315056098Z hello world
+2017-01-04T14:16:33.330748183Z hello world
+2017-01-04T14:16:34.332953982Z hello world
+...
+
+3.9 查看容器内的进程
+ctang@ctang-docker:~$ sudo docker top daemon_dave
+UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD
+root                4785                4760                0                   22:16               ?                   00:00:00            /bin/sh -c while true; do echo hello world; sleep 1; done
+root                5704                4785                0                   22:30               ?                   00:00:00            sleep 1
+ctang@ctang-docker:~$ 
+
+3.10 在容器内部运行进程
+在容器中运行后台任务
+ctang@ctang-docker:~$ sudo docker exec -d daemon_dave touch /etc/new_config_file
+ctang@ctang-docker:~$ 
+
+在容器内运行交互命令
+ctang@ctang-docker:~$ sudo docker exec -t -i daemon_dave /bin/bash
+root@e54e69852730:/# ll /etc/new_config_file 
+-rw-r--r-- 1 root root 0 Jan  4 14:33 /etc/new_config_file
+root@e54e69852730:/# 
+
+3.11 停止守护式容器
+停止正在运行的Docker容器
+ctang@ctang-docker:~$ sudo docker stop daemon_dave
+daemon_dave
+ctang@ctang-docker:~$ 
+
+通过容器ID停止正在运行的容器
+ctang@ctang-docker:~$ sudo docker stop e54e69852730
+e54e69852730
+ctang@ctang-docker:~$ 
+
+显示最后x个容器，使用命令docker ps -n x
+ctang@ctang-docker:~$ sudo docker ps -n 3
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                           PORTS               NAMES
+e54e69852730        ubuntu:16.04        "/bin/sh -c 'while tr"   23 minutes ago      Exited (137) 2 minutes ago                           daemon_dave
+0d22cc9b243a        ubuntu:16.04        "/bin/bash"              33 minutes ago      Exited (0) 24 minutes ago                            bob_the_container
+1144bd0b7da8        ubuntu:16.04        "/bin/bash"              About an hour ago   Exited (130) About an hour ago                       silly_mcnulty
+ctang@ctang-docker:~$ 
+
+3.12 自动重启容器
+如果由于某种错误而导致容器停止运行，我们还可以通过--restart标志，让Docker自动重新启动该容器。--restart标志会检查容器的退出代码，并据此来决定是否要重启容器。默认的行为是Docker不会重启容器。
+ctang@ctang-docker:~$ sudo docker run --restart=always --name daemon_dave2 -d ubuntu:16.04 /bin/sh -c "while true; do echo hello world; sleep 1; done"
+ac9f63227c7dd012329a9bfa86db053d721b348048ef812343730af06d3e5c22
+ctang@ctang-docker:~$ 
+
+还可以将这个标志设为on-failure，这样，只有当容器的退出码为非0值的时候，才会自动重启。另外，on-failure还接受一个可选的重启次数参数
+--restart=on-failure:5
+
+3.13 深入容器
+使用docker inspect来获取更多的容器信息，该命令会对容器进行详细的检查，然后返回其配置信息，包括名称、命令、网络配置以及很多有用的数据。
+ctang@ctang-docker:~$ sudo docker inspect daemon_dave2
+[
+    {
+        "Id": "ac9f63227c7dd012329a9bfa86db053d721b348048ef812343730af06d3e5c22",
+        "Created": "2017-01-05T03:10:26.650348954Z",
+        "Path": "/bin/sh",
+        "Args": [
+            "-c",
+            "while true; do echo hello world; sleep 1; done"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+...
+
+也可以用-f或者--format标志来选定查看结果
+
+查看容器的运行参数
+ctang@ctang-docker:~$ sudo docker inspect --format='{{ .Args }}' daemon_dave2  
+[-c while true; do echo hello world; sleep 1; done]
+
+查看容器的IP地址
+ctang@ctang-docker:~$ sudo docker inspect --format='{{ .NetworkSettings.IPAddress }}' daemon_dave2  
+172.17.0.2
+ctang@ctang-docker:~$ 
+
+查看多个容器
+ctang@ctang-docker:~$ sudo docker inspect --format '{{.Name}} {{.State.Running}}' daemon_dave daemon_dave2     
+/daemon_dave false
+/daemon_dave2 true
+ctang@ctang-docker:~$ 
+
+3.14 删除容器
+ctang@ctang-docker:~$ sudo docker rm daemon_dave
+daemon_dave
+ctang@ctang-docker:~$ 
+
+注意：运行中的Docker容器是无法删除的，必须先通过docker stop或docker kill命令停止容器，才能将其删除。
+
+删除全部容器
+ctang@ctang-docker:~$ sudo docker rm `sudo docker ps -a -q`
+0d22cc9b243a
+1144bd0b7da8
+...
+ctang@ctang-docker:~$ 
+
+
+
+
+
+
+
