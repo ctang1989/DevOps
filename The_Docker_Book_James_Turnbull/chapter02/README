@@ -1,0 +1,6 @@
+第2章 安装Docker
+
+使用root用户执行该脚本
+ctang@ctang-docker:~$ sudo su -
+[sudo] password for ctang: 
+root@ctang-docker:~# sh install_docker_on_ubuntu.sh
