@@ -1,0 +1,12 @@
+构建镜像
+docker build --tag ctang/mysql -f mysql/Dockerfile .
+docker build --tag ctang/nginx -f nginx/Dockerfile .
+docker build --tag ctang/php7 -f php7/Dockerfile .
+
+启动容器
+docker run -d --name mysql -p 3306:3306 -v /data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123 ctang/mysql
+docker run -d --name php7 -p 9000:9000 -v /data/www/html:/usr/local/nginx/html --link mysql:mysql ctang/php7
+docker run -d --name nginx -p 80:80 -v /data/www/html:/usr/local/nginx/html --link php7:php7 ctang/nginx
+
+参考
+https://github.com/addcn/docker-lnmp
