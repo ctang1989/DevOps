@@ -1,0 +1,10 @@
+php7-apache-pdo
+
+1. MySQL
+docker run --restart=always -d --name mysql -p 3306:3306 -v /data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123 ctang/mysql
+
+2. 创建数据库
+create databse test;
+
+3. docker run
+docker run -d --name php7-apache-pdo -v /home/ctang/container/php7-apache-pdo/html:/var/www/html -p 8083:80 --link mysql:mysql ctang/php7-apache-pdo 
