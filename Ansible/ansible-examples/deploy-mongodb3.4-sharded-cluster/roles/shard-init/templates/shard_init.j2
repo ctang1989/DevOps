@@ -1,0 +1,3 @@
+sh.addShard("{{ mongod_shard1_replSetName }}/{{ groups['mongod_servers'][0] }}:{{ mongod_shard1_port }}")
+sh.addShard("{{ mongod_shard2_replSetName }}/{{ groups['mongod_servers'][1] }}:{{ mongod_shard2_port }}")
+sh.addShard("{{ mongod_shard3_replSetName }}/{{ groups['mongod_servers'][2] }}:{{ mongod_shard3_port }}")

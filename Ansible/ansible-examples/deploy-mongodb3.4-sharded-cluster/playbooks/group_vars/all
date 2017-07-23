@@ -1,0 +1,4 @@
+sharding_db: testshard
+sharding_collection: test_collection
+sharding_key: number
+sharding_direction: 1

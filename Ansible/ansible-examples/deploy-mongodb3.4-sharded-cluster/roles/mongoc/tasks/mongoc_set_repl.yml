@@ -1,0 +1,7 @@
+---
+- name: copy the replica set configuration file 
+  template: src=mongoc_repl_set_conf.js.j2 dest=/etc/ansible_setup/mongoc_repl_set_conf.js owner=root group=root mode=0644
+
+- name: replica set initiate
+  command: mongo --port {{ mongoc_port }} /etc/ansible_setup/mongoc_repl_set_conf.js
+  when: ansible_hostname.endswith("test01")

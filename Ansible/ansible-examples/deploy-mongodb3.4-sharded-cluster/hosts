@@ -1,0 +1,16 @@
+# The list of mongodb configuration servers, make sure the total instance number is 1 or 3
+[mongoc_servers]
+local-centos68-test01
+local-centos68-dev01
+local-centos68-prod01
+
+# The list of servers where replication should happen.
+[mongod_servers]
+local-centos68-test01
+local-centos68-dev01
+local-centos68-prod01
+
+# The list of servers where mongos servers would run. 
+[mongos_servers]
+local-centos68-test01
+local-centos68-dev01

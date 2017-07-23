@@ -1,0 +1,6 @@
+---
+# The playbook creates a new database test and populates data in the database to test the sharding.
+
+- hosts: "{{ servername }}"
+  roles:
+    - test-sharding

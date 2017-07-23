@@ -1,0 +1,3 @@
+---
+- include: mongod_init.yml
+- include: mongod_set_repl.yml
