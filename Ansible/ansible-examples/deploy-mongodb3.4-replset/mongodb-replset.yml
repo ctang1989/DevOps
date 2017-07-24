@@ -1,5 +1,0 @@
----
-- hosts: mongodb_servers
-  roles:
-    - common
-    - mongodb-3

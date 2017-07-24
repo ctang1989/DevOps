@@ -1,3 +1,0 @@
----
-- include: mongodb_install.yml
-- include: import_test_data.yml

@@ -1,3 +1,0 @@
----
-- include: set_hosts.yml
-- include: mongodb_install.yml

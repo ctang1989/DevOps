@@ -1,3 +1,0 @@
----
-- name: set /etc/hosts for all machines
-  template: src=hosts.j2 dest=/etc/hosts backup=no
