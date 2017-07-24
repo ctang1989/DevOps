@@ -1,0 +1,14 @@
+---
+- name: copy mongodb initial setup
+  template: src=mongodb_init.js.j2 dest=/etc/ansible_setup/mongodb_init.js owner=root group=root mode=0644
+
+- name: copy mongodb_config_replset.js
+  template: src=mongodb_config_replset.js.j2 dest=/etc/ansible_setup/mongodb_config_replset.js owner=root group=root mode=0644
+
+- name: Initiate the replica set
+  command: mongo /etc/ansible_setup/mongodb_init.js
+  when: ansible_hostname.endswith("test01")
+
+- name: Add the remaining members to the replica set
+  command: mongo /etc/ansible_setup/mongodb_config_replset.js
+  when: ansible_hostname.endswith("test01")

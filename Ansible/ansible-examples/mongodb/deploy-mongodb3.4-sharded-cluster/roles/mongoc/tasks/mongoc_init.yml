@@ -1,0 +1,12 @@
+---
+- name: create data directory for mongoc configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongoc configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/log state=directory owner=mongod group=mongod
+
+- name: create the mongo configuration server file
+  template: src=mongoc.conf.j2 dest=/etc/mongoc.conf
+
+- name: start the mongo configuration server service
+  command: mongod --config /etc/mongoc.conf

@@ -1,0 +1,10 @@
+rs.initiate(
+  {
+    _id : "{{ mongod_shard2_replSetName }}",
+    members: [
+      { _id : 0, host : "{{ groups['mongod_servers'][1] }}:{{ mongod_shard2_port }}" },
+      { _id : 1, host : "{{ groups['mongod_servers'][2] }}:{{ mongod_shard2_port }}" },
+      { _id : 2, host : "{{ groups['mongod_servers'][0] }}:{{ mongod_shard2_port }}", arbiterOnly:true }
+    ]
+  }
+)

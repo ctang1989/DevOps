@@ -1,0 +1,19 @@
+MongoDB 3.4 部署Replica Set
+
+# 部署前提条件
+1. ap='ansible-playbook -u ctang -b -v'
+2. 被控主机已经配置了SSH秘钥认证
+3. 被控主机已经有了相应的用户ctang, 并且设置了sudo不需要输入密码
+4. 被控主机关闭了SELinux和iptables
+5. 控制主机设置好了/etc/hosts
+
+# MongoDB安装
+可以选择yum在线安装方式，也可以选择本地rpm安装包安装
+
+# 为了缩小提交的代码大小，删除掉 roles/mongodb-3/files/mongodb-install/ 下的以下文件，安装时可以使用 yum install --downloadonly --downloaddir=/download mongodb-org 下载下来
+mongodb-org-server-3.4.6-1.el6.x86_64.rpm
+mongodb-org-shell-3.4.6-1.el6.x86_64.rpm
+mongodb-org-tools-3.4.6-1.el6.x86_64.rpm
+
+# Deploy
+ap -i hosts mongodb-replset.yml

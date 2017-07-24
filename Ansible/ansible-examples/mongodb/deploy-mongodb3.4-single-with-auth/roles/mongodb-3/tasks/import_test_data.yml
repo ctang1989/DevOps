@@ -1,0 +1,6 @@
+---
+- name: copy primer-dataset.json
+  copy: src=primer-dataset.json dest=/etc/ansible_setup
+
+- name: import a restaurant dataset for test
+  command: mongoimport -u {{ mongodb_admin_user }} -p {{ mongodb_admin_pass }} --authenticationDatabase=admin --db suzhou --collection restaurants --drop --file /etc/ansible_setup/primer-dataset.json

@@ -1,0 +1,4 @@
+[mongodb_servers]
+centos68-mongodb-xfs-test01
+centos68-mongodb-xfs-dev01
+centos68-mongodb-xfs-prod01

@@ -1,0 +1,17 @@
+replset: mcp-ecommerce-prod01
+mongo_oplog_size: 1024
+mongo_ver: 3.4.6-1.el6.x86_64
+mongo_port: 27017
+mongodb_auth: true
+mongodb_admin_user: admin
+mongodb_admin_pass: admin
+
+# The interface where the mongodb process should listen on.
+# Defaults to the first interface. Change this to:
+# 
+#  iface: eth1
+#
+# ...to override.
+# 
+#iface: '{{ ansible_default_ipv4.interface }}'
+iface: eth1

@@ -1,0 +1,17 @@
+---
+- hosts: all
+  roles:
+    - common
+
+- hosts: mongoc_servers
+  roles:
+    - mongoc
+
+- hosts: mongod_servers
+  roles:
+    - mongod
+
+- hosts: mongos_servers
+  roles:
+    - mongos
+    - shard-init

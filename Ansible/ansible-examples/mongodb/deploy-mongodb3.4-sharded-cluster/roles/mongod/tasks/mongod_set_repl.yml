@@ -1,0 +1,27 @@
+---
+# SHARD1
+- name: copy shard1 replica set configuration file 
+  template: src=shard1_repl_set_conf.js.j2 dest=/etc/ansible_setup/shard1_repl_set_conf.js owner=root group=root mode=0644
+  when: ansible_hostname.endswith("test01")
+
+- name: shard1 replica set initiate
+  command: mongo admin --port {{ mongod_shard1_port }} /etc/ansible_setup/shard1_repl_set_conf.js
+  when: ansible_hostname.endswith("test01")
+
+# SHARD2
+- name: copy shard2 replica set configuration file
+  template: src=shard2_repl_set_conf.js.j2 dest=/etc/ansible_setup/shard2_repl_set_conf.js owner=root group=root mode=0644
+  when: ansible_hostname.endswith("dev01")
+
+- name: shard2 replica set initiate
+  command: mongo admin --port {{ mongod_shard2_port }} /etc/ansible_setup/shard2_repl_set_conf.js
+  when: ansible_hostname.endswith("dev01")
+
+# SHARD3
+- name: copy shard3 replica set configuration file
+  template: src=shard3_repl_set_conf.js.j2 dest=/etc/ansible_setup/shard3_repl_set_conf.js owner=root group=root mode=0644
+  when: ansible_hostname.endswith("prod01")
+
+- name: shard3 replica set initiate
+  command: mongo admin --port {{ mongod_shard3_port }} /etc/ansible_setup/shard3_repl_set_conf.js
+  when: ansible_hostname.endswith("prod01")
