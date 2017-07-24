@@ -1,0 +1,15 @@
+---
+- name: Create setup dir
+  file: path=/etc/ansible_setup owner=root group=root mode=755 state=directory
+  tags:
+    - create_user
+
+- name: copy mongodb_users.js
+  template: src=mongodb_users.js.j2 dest=/etc/ansible_setup/mongodb_users.js owner=root group=root mode=0644
+  tags:
+    - create_user
+
+- name: create user
+  command: mongo admin /etc/ansible_setup/mongodb_users.js
+  tags:
+    - create_user

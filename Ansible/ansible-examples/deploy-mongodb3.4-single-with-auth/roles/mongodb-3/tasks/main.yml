@@ -1,0 +1,4 @@
+---
+- include: mongodb_install.yml
+- include: mongodb_users.yml
+- include: import_test_data.yml

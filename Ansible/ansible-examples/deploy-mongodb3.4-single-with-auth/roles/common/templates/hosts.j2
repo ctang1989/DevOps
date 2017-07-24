@@ -1,0 +1,4 @@
+127.0.0.1       localhost localhost.localdomain localhost4 localhost4.localdomain4
+{% for host in groups['mongodb_servers'] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{ host }}
+{% endfor %}

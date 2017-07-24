@@ -1,0 +1,3 @@
+{% if mongodb_auth is defined and mongodb_auth == True %}
+db.createUser({ user: "{{ mongodb_admin_user|default('adimin') }}", pwd : "{{ mongodb_admin_pass|default('admin') }}", roles : ["readWriteAnyDatabase", "userAdminAnyDatabase", "dbAdminAnyDatabase", "clusterAdmin"]})
+{% endif %}
