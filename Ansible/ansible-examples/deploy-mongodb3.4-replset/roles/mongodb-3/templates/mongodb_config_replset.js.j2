@@ -1,0 +1,7 @@
+// configure replset
+rs.add("{{ groups['mongodb_servers'][1] }}:{{ mongo_port }}")
+rs.addArb("{{ groups['mongodb_servers'][2] }}:{{ mongo_port }}")
+
+cfg = rs.conf()
+cfg.members[0].priority = 2
+rs.reconfig(cfg)
