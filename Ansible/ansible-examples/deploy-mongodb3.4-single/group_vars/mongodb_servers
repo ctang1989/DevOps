@@ -1,0 +1,17 @@
+# The interface where the mongodb process should listen on.
+# Defaults to the first interface. Change this to:
+# 
+#  iface: eth1
+#
+# ...to override.
+# 
+iface: '{{ ansible_default_ipv4.interface }}'
+
+mongo_ver: 3.4.6-1.el6.x86_64
+mongo_port: 27017
+
+# Path settings
+mongo_path: /data/mongodb
+data_path: /data/mongodb/data
+log_path: /data/mongodb/logs
+pid_file_path: /data/mongodb/mongod.pid
