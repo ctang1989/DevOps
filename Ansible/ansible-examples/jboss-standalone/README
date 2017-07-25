@@ -1,0 +1,31 @@
+# 部署前提条件
+1. ap='ansible-playbook -u ctang -b -v'
+2. 被控主机已经配置了SSH秘钥认证
+3. 被控主机已经有了相应的用户ctang, 并且设置了sudo不需要输入密码
+4. 被控主机关闭了SELinux和iptables
+5. 控制主机设置好了/etc/hosts
+
+--
+
+Standalone JBoss Deployment
+
+部署一个简单的JBoss Application Server
+
+运行playbook
+ap -i hosts site.yml
+
+--
+
+Application deployment
+
+部署HelloWorld 和 Ticket Monster两个应用到上面部署的JBoss Server上
+
+运行playbook
+ap -i hosts deploy-application.yml
+
+--
+
+测试
+
+访问HelloWorld, http://<jboss_server>:<http_port>/helloworld
+访问Ticket Monster, http://<jboss_server>:<http_port>/ticket-monster

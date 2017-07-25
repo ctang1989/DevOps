@@ -1,0 +1,5 @@
+---
+- name: Deploy two simple applications to JBoss server
+  hosts: all
+  roles:
+    - java-app
