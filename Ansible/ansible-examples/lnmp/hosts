@@ -1,0 +1,5 @@
+[webserver]
+local-centos68-test01
+
+[dbserver]
+local-centos68-dev01

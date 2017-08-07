@@ -1,0 +1,5 @@
+#!/bin/bash
+mysql -h localhost --user=root -e "GRANT ALL ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}' WITH GRANT OPTION;"
+mysql -h localhost --user=root --password={{ mysql_root_password }} -e "FLUSH PRIVILEGES;"
+mysql -h localhost --user=root --password={{ mysql_root_password }} -e "DELETE FROM mysql.user WHERE password='';"
+mysql -h localhost --user=root --password={{ mysql_root_password }} -e "FLUSH PRIVILEGES;"

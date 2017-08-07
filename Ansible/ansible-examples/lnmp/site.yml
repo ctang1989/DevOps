@@ -1,0 +1,23 @@
+---
+- name: Common setup
+  hosts: all
+  roles:
+    - common
+
+- name: Install Nginx, PHP-FPM
+  hosts: webserver
+  roles:
+    - nginx
+    - php-fpm
+
+- name: Install MySQL
+  hosts: dbserver
+  roles:
+    - mysql
+
+- name: Print message
+  hosts: webserver
+  tasks:
+    - name: 访问网站
+      debug: msg="You can visit http://{{ ansible_default_ipv4.address }}/ for test now."
+    

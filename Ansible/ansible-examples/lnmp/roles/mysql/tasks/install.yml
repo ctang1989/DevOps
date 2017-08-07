@@ -1,0 +1,12 @@
+---
+- name: 配置MySQL官方源
+  yum: name=http://repo.mysql.com/mysql-community-release-el6-5.noarch.rpm state=present
+
+- name: 安装MySQL
+  yum: name={{ item }} state=present
+  with_items:
+    - mysql-community-server
+    - MySQL-python
+
+- name: Start MySQL Service
+  service: name=mysqld state=started enabled=yes

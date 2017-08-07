@@ -1,0 +1,14 @@
+LNMP Stack
+
+# 部署前提条件
+1. ap='ansible-playbook -u ctang -b -v'
+2. 被控主机已经配置了SSH秘钥认证
+3. 被控主机已经有了相应的用户ctang, 并且设置了sudo不需要输入密码
+4. 被控主机关闭了SELinux和iptables
+5. 控制主机设置好了/etc/hosts
+
+部署
+ap -i hosts site.yml
+
+测试
+访问http://<webserver-ip>/

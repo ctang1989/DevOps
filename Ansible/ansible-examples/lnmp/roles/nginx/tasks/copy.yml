@@ -1,0 +1,9 @@
+---
+- name: Copy index.php file to nginx web dir
+  template: src=index.php.j2 dest={{ nginx_html_dir }}/index.php
+
+- name: Copy info.php file to nginx web dir
+  copy: src=info.php dest={{ nginx_html_dir }}
+
+- name: Copy index.html file to nginx web dir
+  template: src=index.html.j2 dest={{ nginx_html_dir }}/index.html

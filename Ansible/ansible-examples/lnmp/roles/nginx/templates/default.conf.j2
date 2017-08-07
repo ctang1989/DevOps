@@ -1,0 +1,31 @@
+server {
+    listen       80;
+    server_name  _;
+
+    access_log  {{ nginx_log_dir }}/access.log  main;
+    error_log   {{ nginx_log_dir }}/error.log  error;
+
+    location / {
+        root   {{ nginx_html_dir }};
+        index  index.html index.htm index.php;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        try_files      $uri =404;
+        root           {{ nginx_html_dir }};
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|mp3)$ {
+        expires      30d;
+    }
+
+    location ~ .*\.(js|css)?$ {
+        expires      12h;
+    }
+}

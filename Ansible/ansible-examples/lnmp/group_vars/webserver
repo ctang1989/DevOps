@@ -1,0 +1,6 @@
+---
+# Nginx 网页文件目录
+nginx_html_dir: /data/nginx/html
+
+# Nginx 日志文件目录
+nginx_log_dir: /data/nginx/logs
