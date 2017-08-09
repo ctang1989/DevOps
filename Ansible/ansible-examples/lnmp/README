@@ -1,4 +1,4 @@
-LNMP Stack
+Linux + Nginx + MySQL + PHP Stack
 
 # 部署前提条件
 1. ap='ansible-playbook -u ctang -b -v'
