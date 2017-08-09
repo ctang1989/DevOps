@@ -1,0 +1,10 @@
+---
+- name: Install phpMyAdmin
+  yum: name=phpmyadmin state=installed
+
+- name: Copy config.inc.php for accessing remote databases using local phpMyAdmin
+  template: src=config.inc.php.j2 dest=/etc/phpMyAdmin/config.inc.php
+
+- name: Copy phpMyAdmin config
+  template: src=phpMyAdmin.conf.j2 dest=/etc/httpd/conf.d/phpMyAdmin.conf
+  notify: restart apache

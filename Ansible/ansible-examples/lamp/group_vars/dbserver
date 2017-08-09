@@ -1,0 +1,8 @@
+---
+# Password for MySQL root
+mysql_root_password: p@ssword
+
+# DB and user for testing
+db_name: suzhou
+db_user: ctang
+db_password: abc123

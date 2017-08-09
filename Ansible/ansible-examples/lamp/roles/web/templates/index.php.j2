@@ -1,0 +1,36 @@
+<html>
+ <head>
+  <title>Ansible Application</title>
+ </head>
+ <body>
+
+  <?php 
+    print "Hello, World!";
+    print "<br />";
+    print "I am a web server configured using Ansible and I am : ";
+    echo exec('hostname');
+    print  "<br /><br />";
+
+    echo "List of Databases: <br />\n";
+    
+    {% for host in groups['dbserver'] %}
+    $link = mysqli_connect('{{ hostvars[host].ansible_default_ipv4.address }}', '{{ hostvars[host].db_user }}', '{{ hostvars[host].db_password }}') or die(mysqli_connect_error($link));
+    {% endfor %}
+        
+    $res = mysqli_query($link, "SHOW DATABASES;");
+    echo "<ul>\n";
+    while ($row = mysqli_fetch_assoc($res)) {
+        echo "<li>" . $row['Database'] . "</li><br />\n";
+    }
+    echo "</ul>";
+  ?>
+
+  <p><a href=http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/info.php>PHP Information</a></p>
+  <p><a href=http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/index.html>Static HTML</a></p>
+  <p><a href=http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/server-info>server-info</a></p>
+  <p><a href=http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/server-status>server-status</a></p>
+  <p><a href=http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/phpmyadmin>phpmyadmin</a></p>
+  <br />
+
+  </body>
+</html>

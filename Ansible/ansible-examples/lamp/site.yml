@@ -1,0 +1,23 @@
+---
+- name: Common setup
+  hosts: all
+  roles:
+    - common
+
+- name: Configure and deploy the webserver and application code
+  hosts: webserver
+  roles:
+    - web
+    - phpMyAdmin
+
+- name: Deploy MySQL and configure the databases
+  hosts: dbserver
+  roles:
+    - db
+
+- name: Print message
+  hosts: webserver
+  tasks:
+    - name: 访问网站
+      debug: msg="You can visit http://{{ ansible_default_ipv4.address }}:{{ httpd_port }}/ for test now."
+    

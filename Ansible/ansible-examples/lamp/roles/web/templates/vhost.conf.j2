@@ -1,0 +1,7 @@
+<VirtualHost {{ ansible_default_ipv4.address }}:{{ httpd_port }}>
+    ServerAdmin {{ serveradmin }}
+    DocumentRoot {{ vhost_document_root }}
+    ServerName {{ ansible_default_ipv4.address }}
+    ErrorLog {{ vhost_log_dir }}/error_log
+    CustomLog {{ vhost_log_dir }}/access_log common
+</VirtualHost>

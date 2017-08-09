@@ -1,0 +1,24 @@
+---
+- name: Set root password
+  shell: mysqladmin -u root password '{{ mysql_root_password  }}'
+
+- name: update MySQL root password for all root accounts
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name=root host={{ item }} password={{ mysql_root_password }}
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+
+- name: ensure anonymous users are not in the database
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name='' host={{ item }} state=absent
+  with_items:
+    - localhost
+    - "{{ inventory_hostname }}"
+
+- name: remove the test database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name=test state=absent
+
+- name: Create Application database
+  mysql_db: login_user=root login_password={{ mysql_root_password }} name={{ db_name }} state=present
+
+- name: Create Application database user
+  mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ db_user }} password={{ db_password }} priv=*.*:ALL host='%' state=present

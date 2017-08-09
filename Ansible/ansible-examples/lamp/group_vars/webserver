@@ -1,0 +1,15 @@
+---
+# httpd service 端口
+httpd_port: 8008
+
+# 系统管理员
+serveradmin: mchina_tang@qq.com
+
+# Apache 网页文件目录
+document_root: /data/apache/html
+
+# vhost 网页文件目录
+vhost_document_root: /data/apache/html/vhost/web
+
+# vhost 日志文件目录
+vhost_log_dir: /data/apache/html/vhost/logs

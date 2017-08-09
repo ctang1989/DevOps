@@ -1,0 +1,9 @@
+---
+- name: Copy index.html file to apache web dir
+  template: src=index.html.j2 dest={{ vhost_document_root }}/index.html
+
+- name: Copy index.php file to apache web dir
+  template: src=index.php.j2 dest={{ vhost_document_root }}/index.php
+
+- name: Copy info.php file to apache web dir
+  copy: src=info.php dest={{ vhost_document_root }}
