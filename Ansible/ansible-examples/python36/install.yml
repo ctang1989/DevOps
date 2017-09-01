@@ -1,0 +1,4 @@
+---
+- hosts: py_hosts
+  roles:
+    - setup

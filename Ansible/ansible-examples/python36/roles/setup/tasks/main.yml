@@ -1,0 +1,58 @@
+---
+- name: Create setup dir
+  file: path=/tmp/ansible_setup owner=root group=root mode=755 state=directory
+
+- name: Install gcc and openssl-devel
+  yum: name={{ item }} state=latest
+  with_items:
+    - gcc
+    - openssl-devel
+
+- name: Get Python-{{ python_version }}.tgz
+  get_url:
+    url: http://mirrors.sohu.com/python/{{ python_version }}/Python-{{ python_version }}.tgz
+    dest: /tmp
+
+- name: Unarchive Python-{{ python_version }}.tgz
+  unarchive:
+    src: /tmp/Python-{{ python_version }}.tgz
+    dest: /usr/local/src
+    remote_src: True
+    creates: /usr/local/src/Python-{{ python_version }}
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Configure
+  shell: chdir=/usr/local/src/Python-{{ python_version }} ./configure --prefix=/usr/local/python3
+
+- name: make and make install
+  shell: chdir=/usr/local/src/Python-{{ python_version }} make && make install
+
+- name: 将Python3加入环境变量
+  shell: echo 'export PATH=$PATH:/usr/local/python3/bin' >> /root/.bashrc && echo 'export PATH=$PATH:/usr/local/python3/bin' >> /home/ctang/.bashrc
+
+- name: Copy upgrade_python_version.sh
+  template: src=upgrade_python_version.sh.j2 dest=/tmp/ansible_setup/upgrade_python_version.sh owner=root group=root mode=0755
+  tags:
+    - upgrade
+
+- name: Execute upgrade_python_version.sh
+  shell: /tmp/ansible_setup/upgrade_python_version.sh
+  tags:
+    - upgrade
+
+- name: 安装常用的Python包
+  pip: name={{ item }} state=present executable=/usr/local/python3/bin/pip3
+  with_items:
+    - requests
+    - bs4
+    - pymongo
+  tags:
+    - pip
+
+- name: 修复Python升级后,yum不能正常工作的问题
+  lineinfile:
+    dest: /usr/bin/yum
+    regexp: '^#!'
+    line: '#!/usr/bin/python2.6'
+  tags:
+    - yum
