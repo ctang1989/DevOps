@@ -1,0 +1,2 @@
+#sudoadm group#
+%sudoadm	ALL=(ALL) 	NOPASSWD: ALL

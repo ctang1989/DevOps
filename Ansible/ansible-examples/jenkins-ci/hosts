@@ -1,0 +1,8 @@
+[jenkins_master]
+local-centos68-test01
+
+[jenkins_agent]
+local-centos68-dev01
+
+[deployment_instances]
+local-centos68-prod01

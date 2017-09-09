@@ -1,0 +1,6 @@
+---
+# Variables listed here are applicable to all host groups
+
+iface: '{{ ansible_default_ipv4.interface }}'
+ntp_server: 172.18.10.99
+jenkins_password: abc123

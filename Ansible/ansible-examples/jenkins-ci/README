@@ -1,0 +1,21 @@
+Jenkins + Ansible + Github 环境部署
+
+部署前提条件
+1. ap='ansible-playbook -u ctang -b -v'
+2. 被控主机已经配置了SSH秘钥认证
+3. 被控主机已经有了相应的用户ctang, 并且设置了sudo不需要输入密码
+4. 被控主机关闭了SELinux和iptables
+5. 控制主机设置好了/etc/hosts
+
+部署
+# Jenkins Master
+ap -i hosts jenkins-master/deploy.yml
+
+# Jenkins Agent
+ap -i hosts jenkins-agent/deploy.yml
+
+# Server for deployment
+ap -i hosts server-for-deployment/deploy.yml
+
+创建测试Job
+参考 Jenkins_Ansible_Github_Create_Job.pdf

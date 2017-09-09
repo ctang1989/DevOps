@@ -1,0 +1,12 @@
+---
+- name: 基础设置
+  hosts: all
+  roles:
+    - common
+  tags:
+    - basic
+
+- name: 设置Jenkins Agent
+  hosts: jenkins_agent
+  roles:
+    - setup

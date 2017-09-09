@@ -1,0 +1,21 @@
+---
+- name: Create sudoadm Group
+  group: name=sudoadm state=present
+
+- name: Copy sudoadm
+  copy: src=sudoadm dest=/etc/sudoers.d/sudoadm mode=440
+
+- name: Add jenkins user
+  user: name=jenkins password={{ jenkins_password }} state=present
+
+- name: Add jenkins user to sudoadm group
+  user: name=jenkins groups=sudoadm append=yes
+
+- name: Create .ssh folder
+  file: path=/home/jenkins/.ssh state=directory owner=jenkins group=jenkins mode=700
+
+- name: Copy id_rsa
+  copy: src=id_rsa dest=/home/jenkins/.ssh/id_rsa owner=jenkins group=jenkins mode=600
+
+- name: Copy id_rsa.pub
+  copy: src=id_rsa.pub dest=/home/jenkins/.ssh/authorized_keys owner=jenkins group=jenkins mode=600

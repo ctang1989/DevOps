@@ -1,0 +1,11 @@
+# The interface where the mongodb process should listen on.
+# Defaults to the first interface. Change this to:
+# 
+#  iface: eth1
+#
+# ...to override.
+# 
+iface: '{{ ansible_default_ipv4.interface }}'
+
+# System user
+jenkins_password: abc123

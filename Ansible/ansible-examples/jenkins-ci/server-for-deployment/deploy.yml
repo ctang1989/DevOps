@@ -1,0 +1,10 @@
+---
+- name: 基础设置
+  hosts: all
+  roles:
+   - common
+
+- name: Setup instances for deployment
+  hosts: deployment_instances
+  roles:
+    - setup

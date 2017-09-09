@@ -1,0 +1,14 @@
+---
+- name: 基础设置
+  hosts: all
+  roles:
+    - common
+
+- name: 安装Jenkins Master
+  hosts: jenkins_master
+  roles:
+    - setup
+
+  tasks:
+    - name: 访问网站
+      debug: msg="Visit http://{{ ansible_default_ipv4.address }}:8080 now."

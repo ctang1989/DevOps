@@ -1,0 +1,3 @@
+---
+- include: basic.yml
+- include: setup_ntp.yml

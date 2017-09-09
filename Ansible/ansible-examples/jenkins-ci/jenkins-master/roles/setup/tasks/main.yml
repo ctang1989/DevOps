@@ -1,0 +1,68 @@
+---
+- name: Install openJDK and git
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - java
+    - git
+
+- name: Copy jenkins.repo
+  copy:
+    src: jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Create setup dir
+  file:
+    path: /etc/ansible_setup
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Import jenkins.io.key
+  rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+- name: Install jenkins
+  yum:
+    name: jenkins
+    state: installed
+
+- name: Start jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Wait for jenkins start complete
+  wait_for:
+    path: /var/lib/jenkins/secrets/initialAdminPassword
+    delay: 10
+
+- name: Create .ssh folder for jenkins
+  file:
+    path: /var/lib/jenkins/.ssh
+    owner: jenkins
+    group: jenkins
+    mode: 0700
+    state: directory
+  tags:
+    - ssh_setting
+
+- name: Copy id_rsa
+  copy: src=id_rsa dest=/var/lib/jenkins/.ssh/id_rsa owner=jenkins group=jenkins mode=600
+  tags:
+    - ssh_setting
+
+- name: Cat initial Admin password
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: initialpassword
+  tags:
+    - show
+
+- name: Admin初始化密码
+  debug: var=initialpassword.stdout
+  tags:
+    - show
