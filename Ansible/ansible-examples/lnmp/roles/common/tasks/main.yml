@@ -4,3 +4,13 @@
 
 - name: Install epel-release
   yum: name=epel-release state=installed
+
+- name: Set open file resource limit
+  copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - set_limits
