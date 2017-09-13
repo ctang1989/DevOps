@@ -5,8 +5,10 @@ server {
     access_log  {{ nginx_log_dir }}/access.log  main;
     error_log   {{ nginx_log_dir }}/error.log  error;
 
+    root   {{ nginx_html_dir }};
+
     location / {
-        root   {{ nginx_html_dir }};
+        #root   {{ nginx_html_dir }};
         index  index.html index.htm index.php;
     }
 
@@ -14,7 +16,7 @@ server {
     #
     location ~ \.php$ {
         try_files      $uri =404;
-        root           {{ nginx_html_dir }};
+        #root           {{ nginx_html_dir }};
         fastcgi_pass   127.0.0.1:9000;
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
