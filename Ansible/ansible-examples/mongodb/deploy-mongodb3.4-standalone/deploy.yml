@@ -1,0 +1,6 @@
+---
+- name: MongoDB Standalone Deployment
+  hosts: mongodb_servers
+  roles:
+    - common
+    - mongodb-3

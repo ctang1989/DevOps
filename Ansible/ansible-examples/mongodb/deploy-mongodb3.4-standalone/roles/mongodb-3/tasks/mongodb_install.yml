@@ -1,0 +1,36 @@
+---
+- name: Disable Transparent Huge Pages (THP)
+  copy: src=disable-transparent-hugepages dest=/etc/init.d owner=root group=root mode=0755
+
+- name: Configure operating system to run THP on boot
+  service: name=disable-transparent-hugepages state=started enabled=yes
+
+- name: Configure MongoDB-3.4 repo
+  copy: src=mongodb-org-3.4.repo dest=/etc/yum.repos.d/mongodb-org-3.4.repo owner=root group=root mode=0644
+
+- name: Create setup directory
+  file: path=/tmp/ansible_setup owner=root group=root mode=755 state=directory
+
+- name: Copy mongodb-org rpm files
+  copy: src=mongodb-install dest=/tmp/ansible_setup
+
+- name: Install MongoDB
+  yum: name=mongodb-org state=installed
+#  yum: name=/tmp/ansible_setup/mongodb-install/{{ item }} state=installed
+#  with_items:
+#    - mongodb-org-server-{{ mongo_ver }}.rpm
+#    - mongodb-org-shell-{{ mongo_ver }}.rpm
+#    - mongodb-org-tools-{{ mongo_ver }}.rpm
+
+- name: Make mongodb data path
+  file: path={{ mongodb_data_path }}/data owner=mongod group=mongod mode=755 state=directory recurse=yes
+
+- name: Make mongodb log path
+  file: path={{ mongodb_data_path }}/logs owner=mongod group=mongod mode=755 state=directory recurse=yes
+
+- name: Install mongodb config
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+  notify: restart mongod
+
+- name: Start up mongdb
+  service: name=mongod state=started enabled=yes
