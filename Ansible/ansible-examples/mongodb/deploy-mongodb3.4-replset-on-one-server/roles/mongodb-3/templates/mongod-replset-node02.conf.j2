@@ -1,0 +1,44 @@
+# mongod-replset-node02.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_datadir }}/replset_node02/logs/mongod.log
+
+# Where and how to store data.
+storage:
+  dbPath: {{ mongodb_datadir }}/replset_node02/data
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: {{ mongodb_datadir }}/replset_node02/mongod.pid  # location of pidfile
+
+# network interfaces
+net:
+  port: {{ replset_node02_port }}
+# bindIp: 127.0.0.1  # Listen to local interface only, comment to listen on all interfaces.
+
+security:
+{% if mongodb_auth is defined and mongodb_auth == False %}
+  authorization: disabled
+{% else %}
+  keyFile: /etc/mongodb.key
+  authorization: enabled
+{% endif %}
+
+replication:
+{% if replset is defined %}
+  replSetName: "{{ replset }}"
+{% endif %}
+  oplogSizeMB: {{ mongo_oplog_size|default(1024) }}
+

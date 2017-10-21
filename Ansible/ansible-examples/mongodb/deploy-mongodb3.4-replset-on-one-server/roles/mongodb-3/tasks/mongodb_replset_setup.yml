@@ -1,0 +1,73 @@
+---
+- name: Copy mongodb replset key
+  copy: src=mongodb.key dest=/etc/mongodb.key owner=mongod group=mongod mode=0400
+  when: mongodb_auth == True
+
+# Replset-node01
+- name: Create data directory for replset-node01
+  file: path={{ mongodb_datadir }}/replset_node01/data owner=mongod group=mongod mode=755 state=directory
+
+- name: Create log directory for replset-node01
+  file: path={{ mongodb_datadir }}/replset_node01/logs owner=mongod group=mongod mode=755 state=directory
+
+- name: Copy mongodb config for replset-node01
+  template: src=mongod-replset-node01.conf.j2 dest=/etc/mongod-replset-node01.conf owner=root group=root mode=0644
+
+- name: Start up mongdb for replset-node01
+  command: mongod --config /etc/mongod-replset-node01.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up replset-node01 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: '^touch'
+    line: 'sudo -u mongod mongod --config /etc/mongod-replset-node01.conf'
+
+# Replset-node02
+- name: Create data directory for replset-node02
+  file: path={{ mongodb_datadir }}/replset_node02/data owner=mongod group=mongod mode=755 state=directory
+
+- name: Create log directory for replset-node02
+  file: path={{ mongodb_datadir }}/replset_node02/logs owner=mongod group=mongod mode=755 state=directory
+
+- name: Copy mongodb config for replset-node02
+  template: src=mongod-replset-node02.conf.j2 dest=/etc/mongod-replset-node02.conf owner=root group=root mode=0644
+
+- name: Start up mongdb for replset-node02
+  command: mongod --config /etc/mongod-replset-node02.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up replset-node02 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'node01.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-replset-node02.conf'
+
+# Replset-node03
+- name: Create data directory for replset-node03
+  file: path={{ mongodb_datadir }}/replset_node03/data owner=mongod group=mongod mode=755 state=directory
+
+- name: Create log directory for replset-node03
+  file: path={{ mongodb_datadir }}/replset_node03/logs owner=mongod group=mongod mode=755 state=directory
+
+- name: Copy mongodb config for replset-node03
+  template: src=mongod-replset-node03.conf.j2 dest=/etc/mongod-replset-node03.conf owner=root group=root mode=0644
+
+- name: Start up mongdb for replset-node03
+  command: mongod --config /etc/mongod-replset-node03.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up replset-node03 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'node02.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-replset-node03.conf'

@@ -1,0 +1,4 @@
+rs.initiate( {
+   _id : "{{ replset }}",
+   members: [ { _id : 0, host : "{{ groups['replset_server'][0] }}:{{ replset_node01_port }}" } ]
+})

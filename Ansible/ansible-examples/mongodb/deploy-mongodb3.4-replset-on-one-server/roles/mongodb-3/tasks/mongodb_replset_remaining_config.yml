@@ -1,0 +1,11 @@
+---
+- name: Copy mongodb_replset_remaining_config.js.j2
+  template: src=mongodb_replset_remaining_config.js.j2 dest=/tmp/ansible_setup/mongodb_replset_remaining_config.js owner=root group=root mode=0644
+
+- name: Add the remaining members to the replica set when mongodb_auth is true
+  command: mongo admin -u {{ mongodb_admin_user }} -p {{ mongodb_admin_pass }} /tmp/ansible_setup/mongodb_replset_remaining_config.js
+  when: mongodb_auth == True
+
+- name: Add the remaining members to the replica set when mongodb_auth is false
+  command: mongo /tmp/ansible_setup/mongodb_replset_remaining_config.js
+  when: mongodb_auth == False
