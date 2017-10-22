@@ -1,0 +1,12 @@
+---
+- name: Copy mongodb_users.js
+  template: src=mongodb_users.js.j2 dest=/tmp/ansible_setup/mongodb_users.js owner=root group=root mode=0644
+  when: ansible_hostname.endswith("test01") and mongodb_auth is defined and mongodb_auth == True
+  tags:
+    - create_user
+
+- name: Create MongoDB user
+  command: mongo admin /tmp/ansible_setup/mongodb_users.js
+  when: ansible_hostname.endswith("test01") and mongodb_auth is defined and mongodb_auth == True
+  tags:
+    - create_user

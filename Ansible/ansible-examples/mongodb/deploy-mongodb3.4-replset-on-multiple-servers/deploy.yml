@@ -1,0 +1,6 @@
+---
+- name: MongoDB Replica Set Deployment on multiple servers
+  hosts: mongodb_servers
+  roles:
+    - common
+    - mongodb-3

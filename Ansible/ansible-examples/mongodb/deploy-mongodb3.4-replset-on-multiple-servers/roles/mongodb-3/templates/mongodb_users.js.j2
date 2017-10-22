@@ -1,0 +1,1 @@
+db.createUser({ user: "{{ mongodb_admin_user|default('adimin') }}", pwd : "{{ mongodb_admin_pass|default('admin') }}", roles : ["readWriteAnyDatabase", "userAdminAnyDatabase", "dbAdminAnyDatabase", "clusterAdmin"]})

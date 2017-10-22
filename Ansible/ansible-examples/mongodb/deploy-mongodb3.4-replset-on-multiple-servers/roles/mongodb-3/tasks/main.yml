@@ -1,0 +1,5 @@
+---
+- include: mongodb_install.yml
+- include: mongodb_replset_init.yml
+- include: mongodb_users.yml
+- include: mongodb_replset_remaining_config.yml
