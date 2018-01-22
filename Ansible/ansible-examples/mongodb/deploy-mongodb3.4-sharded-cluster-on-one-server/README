@@ -1,0 +1,38 @@
+# 部署前提条件
+1. ap='ansible-playbook -u ctang -b -v'
+2. 被控主机已经配置了SSH秘钥认证
+3. 被控主机已经有了相应的用户ctang, 并且设置了sudo不需要输入密码
+4. 被控主机关闭了SELinux和iptables
+5. 控制主机设置好了/etc/hosts
+
+# 部署环境
+1. 1台机器
+2. 端口设定
+mongos: 27017
+config server: 27001-27003
+shard1: 27011-27013
+shard2: 27021-27023
+shard3: 27031-27033
+
+# MongoDB安装
+可以选择yum在线安装方式，也可以选择本地rpm安装包安装
+
+# 为了缩小提交的代码大小，删除掉 roles/common/files/mongodb-install/ 下的以下文件，安装时可以使用 yum install --downloadonly --downloaddir=/download mongodb-org 下载下来
+mongodb-org-mongos-3.4.6-1.el6.x86_64.rpm
+mongodb-org-server-3.4.6-1.el6.x86_64.rpm
+mongodb-org-shell-3.4.6-1.el6.x86_64.rpm
+mongodb-org-tools-3.4.6-1.el6.x86_64.rpm
+
+# 部署Sharding环境
+ap -i hosts deploy-sharding.yml
+
+# 测试Sharding
+1. Ranged Sharding
+ap -i hosts TEST-Ranged-Sharding/ranged-sharding.yml -e servername=centos68-mongodb-xfs-data-prod02
+2. Hashed Sharding
+ap -i hosts TEST-Hashed-Sharding/hashed-sharding.yml -e servername=centos68-mongodb-xfs-data-prod02
+
+# 参考文档
+1. https://oracleblog.org/working-case/mongdb-study-note/
+2. https://docs.mongodb.com/manual/tutorial/deploy-shard-cluster/
+3. https://github.com/ansible/ansible-examples/tree/master/mongodb

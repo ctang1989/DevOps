@@ -1,0 +1,3 @@
+sharding_db: test_hashed_sharding_db
+sharding_collection: test_hashed_sharding_collection
+sharding_key: number

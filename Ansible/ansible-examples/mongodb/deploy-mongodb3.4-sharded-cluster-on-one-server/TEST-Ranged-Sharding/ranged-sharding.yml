@@ -1,0 +1,5 @@
+---
+- name: Test Ranged Sharding
+  hosts: "{{ servername }}"
+  roles:
+    - ranged-sharding

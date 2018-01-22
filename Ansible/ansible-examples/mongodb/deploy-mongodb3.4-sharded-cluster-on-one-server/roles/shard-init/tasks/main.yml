@@ -1,0 +1,6 @@
+---
+- name: 创建初始化Shard的文件
+  template: src=shard_init.j2 dest=/etc/ansible_setup/shard_init.js
+
+- name: Add the shard to the mongos
+  command: mongo admin --port {{ mongos_port }} /etc/ansible_setup/shard_init.js

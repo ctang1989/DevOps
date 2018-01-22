@@ -1,0 +1,3 @@
+---
+- include: mongoc_init.yml
+- include: mongoc_set_repl.yml

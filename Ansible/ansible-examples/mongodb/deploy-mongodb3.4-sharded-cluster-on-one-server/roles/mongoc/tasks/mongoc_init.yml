@@ -1,0 +1,39 @@
+---
+# mongoc_01
+- name: create data directory for mongoc_01 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c01/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongoc_01 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c01/log state=directory owner=mongod group=mongod
+
+- name: create the mongoc_01 configuration server file
+  template: src=mongoc_01.conf.j2 dest=/etc/mongoc_01.conf
+
+- name: start the mongoc_01 configuration server service
+  command: mongod --config /etc/mongoc_01.conf
+
+# mongoc_02
+- name: create data directory for mongoc_02 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c02/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongoc_02 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c02/log state=directory owner=mongod group=mongod
+
+- name: create the mongoc_02 configuration server file
+  template: src=mongoc_02.conf.j2 dest=/etc/mongoc_02.conf
+
+- name: start the mongoc_02 configuration server service
+  command: mongod --config /etc/mongoc_02.conf
+
+# mongoc_03
+- name: create data directory for mongoc_03 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c03/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongoc_03 configuration server
+  file: path={{ mongodb_datadir_prefix }}/mongoc/c03/log state=directory owner=mongod group=mongod
+
+- name: create the mongoc_03 configuration server file
+  template: src=mongoc_03.conf.j2 dest=/etc/mongoc_03.conf
+
+- name: start the mongoc_03 configuration server service
+  command: mongod --config /etc/mongoc_03.conf

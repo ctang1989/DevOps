@@ -1,0 +1,117 @@
+---
+# SHARD1-01
+- name: create data directory for mongodb shard1_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_01/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard1_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_01/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard1_01 configuration file
+  template: src=mongod-shard1-01.conf.j2 dest=/etc/mongod-shard1-01.conf
+
+- name: start the mongodb shard1_01 service
+  command: mongod --config /etc/mongod-shard1-01.conf
+
+# SHARD1-02
+- name: create data directory for mongodb shard1_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_02/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard1_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_02/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard1_02 configuration file
+  template: src=mongod-shard1-02.conf.j2 dest=/etc/mongod-shard1-02.conf
+
+- name: start the mongodb shard1_02 service
+  command: mongod --config /etc/mongod-shard1-02.conf
+
+# SHARD1-03
+- name: create data directory for mongodb shard1_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_03/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard1_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard1_03/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard1_03 configuration file
+  template: src=mongod-shard1-03.conf.j2 dest=/etc/mongod-shard1-03.conf
+
+- name: start the mongodb shard1_03 service
+  command: mongod --config /etc/mongod-shard1-03.conf
+
+# SHARD2-01
+- name: create data directory for mongodb shard2_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_01/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard2_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_01/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard2_01 configuration file
+  template: src=mongod-shard2-01.conf.j2 dest=/etc/mongod-shard2-01.conf
+
+- name: start the mongodb shard2_01 service
+  command: mongod --config /etc/mongod-shard2-01.conf
+
+# SHARD2-02
+- name: create data directory for mongodb shard2_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_02/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard2_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_02/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard2_02 configuration file
+  template: src=mongod-shard2-02.conf.j2 dest=/etc/mongod-shard2-02.conf
+
+- name: start the mongodb shard2_02 service
+  command: mongod --config /etc/mongod-shard2-02.conf
+
+# SHARD2-03
+- name: create data directory for mongodb shard2_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_03/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard2_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard2_03/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard2_03 configuration file
+  template: src=mongod-shard2-03.conf.j2 dest=/etc/mongod-shard2-03.conf
+
+- name: start the mongodb shard2_03 service
+  command: mongod --config /etc/mongod-shard2-03.conf
+
+# SHARD3-01
+- name: create data directory for mongodb shard3_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_01/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard3_01
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_01/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard3_01 configuration file
+  template: src=mongod-shard3-01.conf.j2 dest=/etc/mongod-shard3-01.conf
+
+- name: start the mongodb shard3_01 service
+  command: mongod --config /etc/mongod-shard3-01.conf
+
+# SHARD3-02
+- name: create data directory for mongodb shard3_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_02/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard3_02
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_02/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard3_02 configuration file
+  template: src=mongod-shard3-02.conf.j2 dest=/etc/mongod-shard3-02.conf
+
+- name: start the mongodb shard3_02 service
+  command: mongod --config /etc/mongod-shard3-02.conf
+
+# SHARD3-03
+- name: create data directory for mongodb shard3_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_03/data state=directory owner=mongod group=mongod
+
+- name: create log directory for mongodb shard3_03
+  file: path={{ mongodb_datadir_prefix }}/mongod/shard3_03/log state=directory owner=mongod group=mongod
+
+- name: create the mongodb shard3_03 configuration file
+  template: src=mongod-shard3-03.conf.j2 dest=/etc/mongod-shard3-03.conf
+
+- name: start the mongodb shard3_03 service
+  command: mongod --config /etc/mongod-shard3-03.conf

@@ -1,0 +1,40 @@
+# The global variable file mongodb installation
+mongo_ver: 3.4.6-1.el6.x86_64
+
+# The directory prefix where the database files would be stored
+mongodb_datadir_prefix: /data/mongo
+
+# mongo config server replica set name
+mongoc_replSetName: cfgReplSet
+
+# mongo config server port
+mongoc_01_port: 27001
+mongoc_02_port: 27002
+mongoc_03_port: 27003
+
+# mongodb shard1 replica set name
+mongod_shard1_replSetName: shard1ReplSet
+
+# mongodb shard1 port
+mongod_shard1_01_port: 27011
+mongod_shard1_02_port: 27012
+mongod_shard1_03_port: 27013
+
+# mongodb shard2 replica set name
+mongod_shard2_replSetName: shard2ReplSet
+
+# mongodb shard2 port
+mongod_shard2_01_port: 27021
+mongod_shard2_02_port: 27022
+mongod_shard2_03_port: 27023
+
+# mongodb shard3 replica set name
+mongod_shard3_replSetName: shard3ReplSet
+
+# mongodb shard3 port
+mongod_shard3_01_port: 27031
+mongod_shard3_02_port: 27032
+mongod_shard3_03_port: 27033
+
+# mongos port
+mongos_port: 27017

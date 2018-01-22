@@ -1,0 +1,47 @@
+# mongod-shard2-03.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_datadir_prefix }}/mongod/shard2_03/log/mongod-shard2-03.log
+
+# Where and how to store data.
+storage:
+  dbPath: {{ mongodb_datadir_prefix }}/mongod/shard2_03/data
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: {{ mongodb_datadir_prefix }}/mongod/shard2_03/mongod.pid  # location of pidfile
+
+# network interfaces
+net:
+  port: {{ mongod_shard2_03_port }}
+# bindIp: 127.0.0.1  # Listen to local interface only, comment to listen on all interfaces.
+
+
+#security:
+# authorization: enabled
+
+#operationProfiling:
+
+replication:
+  replSetName: {{ mongod_shard2_replSetName }}
+
+sharding:
+  clusterRole: shardsvr
+
+## Enterprise-Only Options
+
+#auditLog:
+
+#snmp:

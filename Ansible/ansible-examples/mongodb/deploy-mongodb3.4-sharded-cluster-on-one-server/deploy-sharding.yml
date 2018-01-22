@@ -1,0 +1,8 @@
+---
+- hosts: mongo_server
+  roles:
+    - common
+    - mongoc
+    - mongod
+    - mongos
+    - shard-init
