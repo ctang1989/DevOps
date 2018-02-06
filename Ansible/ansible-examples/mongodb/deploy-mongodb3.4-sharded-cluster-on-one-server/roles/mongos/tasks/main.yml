@@ -7,6 +7,16 @@
 
 - name: 启动mongos服务
   command: mongos --config /etc/mongos.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up mongos when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard3-03.conf$'
+    line: 'sudo -u mongod mongos --config /etc/mongos.conf'
 
 - name: 暂停一段时间
   pause: seconds=20

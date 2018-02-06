@@ -11,6 +11,16 @@
 
 - name: start the mongoc_01 configuration server service
   command: mongod --config /etc/mongoc_01.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up mongoc_01 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: '^touch'
+    line: 'sudo -u mongod mongod --config /etc/mongoc_01.conf'
 
 # mongoc_02
 - name: create data directory for mongoc_02 configuration server
@@ -24,6 +34,16 @@
 
 - name: start the mongoc_02 configuration server service
   command: mongod --config /etc/mongoc_02.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up mongoc_02 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongoc_01.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongoc_02.conf'
 
 # mongoc_03
 - name: create data directory for mongoc_03 configuration server
@@ -37,3 +57,13 @@
 
 - name: start the mongoc_03 configuration server service
   command: mongod --config /etc/mongoc_03.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up mongoc_03 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongoc_02.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongoc_03.conf'

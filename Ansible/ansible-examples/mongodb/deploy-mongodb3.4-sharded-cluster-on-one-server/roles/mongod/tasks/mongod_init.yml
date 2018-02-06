@@ -11,6 +11,16 @@
 
 - name: start the mongodb shard1_01 service
   command: mongod --config /etc/mongod-shard1-01.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard1_01 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongoc_03.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard1-01.conf'
 
 # SHARD1-02
 - name: create data directory for mongodb shard1_02
@@ -24,6 +34,16 @@
 
 - name: start the mongodb shard1_02 service
   command: mongod --config /etc/mongod-shard1-02.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard1_02 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard1-01.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard1-02.conf'
 
 # SHARD1-03
 - name: create data directory for mongodb shard1_03
@@ -37,6 +57,16 @@
 
 - name: start the mongodb shard1_03 service
   command: mongod --config /etc/mongod-shard1-03.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard1_03 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard1-02.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard1-03.conf'
 
 # SHARD2-01
 - name: create data directory for mongodb shard2_01
@@ -50,6 +80,16 @@
 
 - name: start the mongodb shard2_01 service
   command: mongod --config /etc/mongod-shard2-01.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard2_01 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard1-03.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard2-01.conf'
 
 # SHARD2-02
 - name: create data directory for mongodb shard2_02
@@ -63,6 +103,16 @@
 
 - name: start the mongodb shard2_02 service
   command: mongod --config /etc/mongod-shard2-02.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard2_02 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard2-01.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard2-02.conf'
 
 # SHARD2-03
 - name: create data directory for mongodb shard2_03
@@ -76,6 +126,16 @@
 
 - name: start the mongodb shard2_03 service
   command: mongod --config /etc/mongod-shard2-03.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+  
+- name: Start up shard2_03 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard2-02.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard2-03.conf'
 
 # SHARD3-01
 - name: create data directory for mongodb shard3_01
@@ -89,6 +149,16 @@
 
 - name: start the mongodb shard3_01 service
   command: mongod --config /etc/mongod-shard3-01.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard3_01 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard2-03.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard3-01.conf'
 
 # SHARD3-02
 - name: create data directory for mongodb shard3_02
@@ -102,6 +172,16 @@
 
 - name: start the mongodb shard3_02 service
   command: mongod --config /etc/mongod-shard3-02.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard3_02 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard3-01.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard3-02.conf'
 
 # SHARD3-03
 - name: create data directory for mongodb shard3_03
@@ -115,3 +195,13 @@
 
 - name: start the mongodb shard3_03 service
   command: mongod --config /etc/mongod-shard3-03.conf
+  become: true
+  become_method: sudo
+  become_user: mongod
+  ignore_errors: yes
+
+- name: Start up shard3_03 when boot
+  lineinfile:
+    dest: /etc/rc.d/rc.local
+    insertafter: 'mongod-shard3-02.conf$'
+    line: 'sudo -u mongod mongod --config /etc/mongod-shard3-03.conf'
