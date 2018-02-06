@@ -1,3 +1,4 @@
 ---
+- include: configure_limit.yml
 - include: set_hosts.yml
 - include: mongodb_install.yml

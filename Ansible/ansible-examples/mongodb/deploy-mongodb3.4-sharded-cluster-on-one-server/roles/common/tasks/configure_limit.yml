@@ -1,0 +1,6 @@
+---
+- name: Configure limit
+  lineinfile:
+    dest: /etc/security/limits.d/90-nproc.conf
+    regexp: '1024$'
+    line: '*          soft    nproc     64000'
